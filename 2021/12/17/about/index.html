@@ -202,50 +202,79 @@
 <p><strong>2.1 安装 Java</strong></p>
 <p>Jenkins 是依赖 Java 的，所以要先安装 Java 环境。</p>
 <p>CenterOS-8 可以直接使用 dnf 命令（dnf 是包的管理工具，类似 npm）</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dnf search java<span class="literal">-1</span>.<span class="number">8</span></span><br><span class="line">dnf install java<span class="literal">-1</span>.<span class="number">8.0</span><span class="literal">-openjdk</span>.x86_64</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">dnf search java<span class="token operator">-</span>1<span class="token punctuation">.</span>8
+dnf install java<span class="token operator">-</span>1<span class="token punctuation">.</span>8<span class="token punctuation">.</span>0<span class="token operator">-</span>openjdk<span class="token punctuation">.</span>x86_64<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <p><strong>2.2 安装 Jenkins</strong></p>
 <p>因为 Jenkins 本身是没有在 dnf 的软件仓库包中，所以要连接 Jenkins 仓库</p>
 <p>wget 是 Linux 中下载文件的一个工具，-O 表示输出到某个文件夹并且命名为 什么文件夹</p>
 <p>rpm 全称 The RPM Package Manage，是 Linux 下的一个软件包管理器</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">wget</span> <span class="literal">-O</span> /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat<span class="literal">-stable</span>/jenkins.repo</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">wget <span class="token operator">-</span>O <span class="token operator">/</span>etc<span class="token operator">/</span>yum<span class="token punctuation">.</span>repos<span class="token punctuation">.</span>d<span class="token operator">/</span>jenkins<span class="token punctuation">.</span>repo https:<span class="token operator">/</span><span class="token operator">/</span>pkg<span class="token punctuation">.</span>jenkins<span class="token punctuation">.</span>io<span class="token operator">/</span>redhat<span class="token operator">-</span>stable<span class="token operator">/</span>jenkins<span class="token punctuation">.</span>repo<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>如果没有下载指定的文件夹（/etc/yum.repos.d/）下，要将 jenkins.repo 文件移动到指定的目录下：</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> jenkins.repo /etc/yum.repos.d/</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell"><span class="token function">mv</span> jenkins<span class="token punctuation">.</span>repo <span class="token operator">/</span>etc<span class="token operator">/</span>yum<span class="token punctuation">.</span>repos<span class="token punctuation">.</span>d<span class="token operator">/</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>安装 jenkins 需要做软件合法验证：</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/yum.repos.d/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入 GPG 密钥以确保您的软件合法</span></span><br><span class="line">rpm -<span class="literal">-import</span> https://pkg.jenkins.io/redhat<span class="literal">-stable</span>/jenkins.io.key</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">cd <span class="token operator">/</span>etc<span class="token operator">/</span>yum<span class="token punctuation">.</span>repos<span class="token punctuation">.</span>d<span class="token operator">/</span>
+
+<span class="token comment"># 导入 GPG 密钥以确保您的软件合法</span>
+rpm <span class="token operator">--</span>import https:<span class="token operator">/</span><span class="token operator">/</span>pkg<span class="token punctuation">.</span>jenkins<span class="token punctuation">.</span>io<span class="token operator">/</span>redhat<span class="token operator">-</span>stable<span class="token operator">/</span>jenkins<span class="token punctuation">.</span>io<span class="token punctuation">.</span>key<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>但是这里安装 Jenkins 仍然安装不成功，需要编辑修改 jenkins.repo</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入文件</span></span><br><span class="line">vi jenkins.repo</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell"><span class="token comment"># 进入文件</span>
+vi jenkins<span class="token punctuation">.</span>repo<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <p>点击键盘 I，编辑文件，删除 -stable</p>
 <p>对文件进行保存退出操作：Esc → 按住 Shift + : → 输入wq → 回车</p>
 <p>再进行 Jenkins 安装</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dnf install jenkins</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">dnf install jenkins<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>安装成功后，启动 Jenkins</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动 Jenkins</span></span><br><span class="line">systemctl <span class="built_in">start</span> jenkins</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 Jenkins 状态</span></span><br><span class="line">systemctl status jenkins</span><br><span class="line"></span><br><span class="line"><span class="comment"># 随着操作系统的启动而启动</span></span><br><span class="line">systemctl enable jenkins</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输入 enable 有提示的话，根据提示可以输入命令，如：</span></span><br><span class="line">/usr/lib/systemd/systemd<span class="literal">-sysv</span><span class="literal">-install</span> enable jenkins</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell"><span class="token comment"># 启动 Jenkins</span>
+systemctl <span class="token function">start</span> jenkins
+
+<span class="token comment"># 查看 Jenkins 状态</span>
+systemctl status jenkins
+
+<span class="token comment"># 随着操作系统的启动而启动</span>
+systemctl enable jenkins
+
+<span class="token comment"># 输入 enable 有提示的话，根据提示可以输入命令，如：</span>
+<span class="token operator">/</span>usr<span class="token operator">/</span>lib<span class="token operator">/</span>systemd<span class="token operator">/</span>systemd<span class="token operator">-</span>sysv<span class="token operator">-</span>install enable jenkins<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>启动后，访问公网 ip + :8080 端口，就是 Jenkins 图形化界面。</p>
 <p>如果访问不到 8080 端口，需要在服务器（安全组或者防火墙）中添加 8080 端口</p>
 <p>访问公网 ip + 8080 后，出现解锁 Jenkins 界面，解锁 Jenkins ：</p>
 <p>复制页面上的文件路径，在终端中输入：</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> 文件路径</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell"><span class="token function">cat</span> 文件路径<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>得到一串密码后，在页面中管理员密码输入得到的一串密码。</p>
 <p>安装推荐的插件或者选择插件来安装。</p>
 <p><strong>2.3 安装 Nginx</strong></p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dnf install nginx</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">dnf install nginx<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>启动 Nginx</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动</span></span><br><span class="line">systemctl <span class="built_in">start</span> nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看状态</span></span><br><span class="line">systemctl status nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 随着服务器启动而启动</span></span><br><span class="line">systemctl enable nginx</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell"><span class="token comment"># 启动</span>
+systemctl <span class="token function">start</span> nginx
+
+<span class="token comment"># 查看状态</span>
+systemctl status nginx
+
+<span class="token comment"># 随着服务器启动而启动</span>
+systemctl enable nginx<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p><strong>2.4 安装 git</strong></p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dnf install git</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">dnf install git<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <h2 id="3-部署操作"><a href="#3-部署操作" class="headerlink" title="3. 部署操作"></a>3. 部署操作</h2><hr>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建新的文件夹</span></span><br><span class="line">mkdir mall_cms</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入文件夹</span></span><br><span class="line"><span class="built_in">cd</span> mall_cms/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建文件</span></span><br><span class="line">touch index.html</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell"><span class="token comment"># 创建新的文件夹</span>
+mkdir mall_cms
+
+<span class="token comment"># 进入文件夹</span>
+cd mall_cms<span class="token operator">/</span>
+
+<span class="token comment"># 创建文件</span>
+touch index<span class="token punctuation">.</span>html<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p><strong>3.1 修改 Nginx 配置</strong></p>
 <p>可以使用 vi /etc/nginx/nginx.conf  进行编辑</p>
@@ -255,7 +284,13 @@
 <li>注释 server 中，/usr/share/nginx/html 行</li>
 <li>配置 location / {}</li>
 </ol>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这里配置表示：在 /root/mall_cms 目录下去找 index.html 文件</span></span><br><span class="line">server &#123;</span><br><span class="line">	location / &#123;</span><br><span class="line">		root /root/mall_cms</span><br><span class="line">		index index.html</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell"><span class="token comment"># 这里配置表示：在 /root/mall_cms 目录下去找 index.html 文件</span>
+server <span class="token punctuation">&#123;</span>
+	location <span class="token operator">/</span> <span class="token punctuation">&#123;</span>
+		root <span class="token operator">/</span>root<span class="token operator">/</span>mall_cms
+		index index<span class="token punctuation">.</span>html
+	<span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <ol>
 <li>修改完 Nginx 配置后，重启 Nginx，<code>systemctl restart nginx</code></li>
@@ -268,7 +303,23 @@
 </ol>
 <p>触发器规则：</p>
 <p>定时字符串从左到右分别是：分 时 日 月 周</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每半小时构建一次OR每半小时检查一次远程代码分支，有更新则构建</span></span><br><span class="line"><span class="built_in">H</span>/<span class="number">30</span> * * * *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 每两小时构建一次OR每两小时检查一次远程代码分支，有更新则构建</span></span><br><span class="line"><span class="built_in">H</span> <span class="built_in">H</span>/<span class="number">2</span> * * *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 每天凌晨两点定时构建</span></span><br><span class="line"><span class="built_in">H</span> <span class="number">2</span> * * *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 每月15号执行构建</span></span><br><span class="line"><span class="built_in">H</span> <span class="built_in">H</span> <span class="number">15</span> * *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 工作日，上午9点整执行</span></span><br><span class="line"><span class="built_in">H</span> <span class="number">9</span> * * <span class="number">1</span><span class="literal">-5</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 每周1，3，5，从8：30开始，截止19:30，每4小时30分构建一次</span></span><br><span class="line"><span class="built_in">H</span>/<span class="number">30</span> <span class="number">8</span><span class="literal">-20</span>/<span class="number">4</span> * * <span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell"><span class="token comment"># 每半小时构建一次OR每半小时检查一次远程代码分支，有更新则构建</span>
+H<span class="token operator">/</span>30 <span class="token operator">*</span> <span class="token operator">*</span> <span class="token operator">*</span> <span class="token operator">*</span>
+
+<span class="token comment"># 每两小时构建一次OR每两小时检查一次远程代码分支，有更新则构建</span>
+H H<span class="token operator">/</span>2 <span class="token operator">*</span> <span class="token operator">*</span> <span class="token operator">*</span>
+
+<span class="token comment"># 每天凌晨两点定时构建</span>
+H 2 <span class="token operator">*</span> <span class="token operator">*</span> <span class="token operator">*</span>
+
+<span class="token comment"># 每月15号执行构建</span>
+H H 15 <span class="token operator">*</span> <span class="token operator">*</span>
+
+<span class="token comment"># 工作日，上午9点整执行</span>
+H 9 <span class="token operator">*</span> <span class="token operator">*</span> 1<span class="token operator">-</span>5
+
+<span class="token comment"># 每周1，3，5，从8：30开始，截止19:30，每4小时30分构建一次</span>
+H<span class="token operator">/</span>30 8<span class="token operator">-</span>20<span class="token operator">/</span>4 <span class="token operator">*</span> <span class="token operator">*</span> 1<span class="token punctuation">,</span>3<span class="token punctuation">,</span>5<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="4-修改远程服务器文件的方式"><a href="#4-修改远程服务器文件的方式" class="headerlink" title="4. 修改远程服务器文件的方式"></a>4. 修改远程服务器文件的方式</h2><hr>
 <ol>
@@ -278,7 +329,9 @@
 </ol>
 <p>注意：有些文件在搜索栏看不到时，要进入到文件夹中，在 vscode 目录中才能查看到，可以进行编辑操作</p>
 <p><img src="https://s3-us-west-2.amazonaws.com/secure.notion-static.com/876483d4-19fb-4db6-b371-43bac71e59a7/2369b6b202012231408022328_1800_500.jpeg" alt="2369b6b202012231408022328_1800_500.jpeg"></p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-jsx" data-language="jsx"><code class="language-jsx"><span class="token keyword">function</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+	console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
   <p> — Dec 17, 2021</p>
   
 
